@@ -1,0 +1,143 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="10dp">
+
+        <EditText
+            android:id="@+id/inputFirstName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/first_name"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+        <EditText
+            android:id="@+id/inputLastName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/last_name"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container2"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="normal" >
+
+        <EditText
+            android:id="@+id/inputEmailAddress"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/email_address"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+        <EditText
+            android:id="@+id/inputPhoneNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/phone_number"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/level_of_education"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+        <Spinner
+            android:id="@+id/spinnerLevelOfEducation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/subjects_to_tutor"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
+
+        <CheckBox
+            android:id="@+id/checkboxMath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Math"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:layout_marginBottom="5dp" />
+
+        <CheckBox
+            android:id="@+id/checkboxScience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Science"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:layout_marginBottom="5dp"
+            android:checked="false" />
+
+        <!--<CheckBox-->
+            <!--android:id="@+id/checkboxEnglish"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="English"-->
+            <!--android:fontFamily="sans-serif-thin"-->
+            <!--android:textStyle="normal"-->
+            <!--android:layout_marginBottom="20dp" />-->
+
+        <EditText
+            android:id="@+id/inputHourlyRate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/hourly_rate"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/submit"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:onClick="submit"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp">
+        </Button>
+
+    </LinearLayout>
+
+</LinearLayout>
