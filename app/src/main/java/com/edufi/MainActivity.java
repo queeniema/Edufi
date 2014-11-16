@@ -26,6 +26,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+    public final static String EXTRA_MESSAGE = "com.edufi";
+
+    public static String userType;
+
     // Used to check whether initial setup has been completed
     public static SharedPreferences savedPreferences;
     public static final String PREF_LOGGED_IN = "com.edufi.logged_in";
@@ -51,8 +55,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent intent = new Intent(this, LoginActivity.class);
-//        startActivity(intent);
 
         // Check if user is already logged in
         savedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -61,16 +63,6 @@ public class MainActivity extends Activity {
             startActivity(intent);
             finish();
         }
-
-        // Check if setup has been completed
-//        savedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        if(savedPreferences.getBoolean(PREF_SHOW_ON_APP_START, true)){
-////            getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-////            getActionBar().hide();
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
 
         setContentView(R.layout.activity_main);
 

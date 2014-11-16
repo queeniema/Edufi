@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -20,24 +19,31 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 
 
-public class LoginActivity extends Activity {
+public class SetupLoginActivity extends Activity {
+    private String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
+        // Get the message from the intent
+        Intent intent = getIntent();
+        // Set user type globally
+        MainActivity.userType = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+
+        setContentView(R.layout.activity_setup_login);
     }
 
-    /* Called when the user clicks the Log In button */
-    public void login(View view) {
+    /* Called when the user clicks the Continue button */
+    public void continueOn(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         // Collect data from inputs
         EditText username = (EditText) findViewById(R.id.inputUsername);
         EditText password = (EditText) findViewById(R.id.inputPassword);
 
         // Convert to strings
-        String usernameString = username.getText().toString().trim();
-        String passwordString = password.getText().toString().trim();
+        String usernameString = username.getText().toString();
+        String passwordString = password.getText().toString();
 
         // Check if all fields have been filled out
 //        TODO check format types like phone number has dashes
@@ -47,8 +53,8 @@ public class LoginActivity extends Activity {
             password.setError("Password is required!");
         } else {
             // Insert the data into the database
-            new SummaryAsyncTask().execute(usernameString, passwordString);
-
+            new SummaryAsyncTask().execute(usernameString, passwordString, MainActivity.userType);
+//
             // Mark that the user has logged in
             MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
             startActivity(intent);
@@ -62,7 +68,7 @@ public class LoginActivity extends Activity {
         startActivity(intent);
     }
 
-    public void postData(String username, String password)
+    public void postData(String username, String password, String userType)
     {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
@@ -72,6 +78,7 @@ public class LoginActivity extends Activity {
             nameValuePairs.add(new BasicNameValuePair("type", "login"));
             nameValuePairs.add(new BasicNameValuePair("username", username));
             nameValuePairs.add(new BasicNameValuePair("password", password));
+            nameValuePairs.add(new BasicNameValuePair("usertype", userType));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
         }
@@ -84,7 +91,7 @@ public class LoginActivity extends Activity {
     private class SummaryAsyncTask extends AsyncTask<String, Void, Void> {
 
         protected Void doInBackground(String... params){
-            postData(params[0], params[1]);
+            postData(params[0], params[1], params[2]);
             return null;
         }
     }

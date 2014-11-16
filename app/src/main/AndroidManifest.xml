@@ -67,6 +67,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.edufi.MainActivity" />
         </activity>
+        <!-- A child of the main activity -->
+        <activity
+            android:name="com.edufi.SetupLoginActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:label="@string/setup"
+            android:parentActivityName="com.edufi.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.edufi.MainActivity" />
+        </activity>
     </application>
 
 

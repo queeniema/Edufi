@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 
 public class SetupStudentActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +53,7 @@ public class SetupStudentActivity extends Activity {
 
     /* Called when the user clicks the Submit button */
     public void submit(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SetupLoginActivity.class);
 
         // Collect data from inputs
         EditText firstName = (EditText) findViewById(R.id.inputFirstName);
@@ -65,11 +63,11 @@ public class SetupStudentActivity extends Activity {
         final Spinner yearInSchoolSpinner = (Spinner) findViewById(R.id.spinnerYearInSchool);
 
         // Convert to strings
-        String firstNameString = firstName.getText().toString();
-        String lastNameString = lastName.getText().toString();
-        String emailAddressString = emailAddress.getText().toString();
-        String phoneNumberString = phoneNumber.getText().toString();
-        String yearInSchoolString = yearInSchoolSpinner.getSelectedItem().toString();
+        String firstNameString = firstName.getText().toString().trim();
+        String lastNameString = lastName.getText().toString().trim();
+        String emailAddressString = emailAddress.getText().toString().trim();
+        String phoneNumberString = phoneNumber.getText().toString().trim();
+        String yearInSchoolString = yearInSchoolSpinner.getSelectedItem().toString().trim();
 
         // Check if all fields have been filled out
 //        TODO check format types like phone number has dashes
@@ -86,8 +84,8 @@ public class SetupStudentActivity extends Activity {
             new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
                     phoneNumberString, yearInSchoolString);
 
-            // Mark that the setup was completed and the user is now logged in
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
+            // Send user type
+            intent.putExtra(MainActivity.EXTRA_MESSAGE, "student");
             startActivity(intent);
         }
     }
@@ -96,7 +94,7 @@ public class SetupStudentActivity extends Activity {
                          String phoneNumber, String yearInSchool)
     {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://107.170.241.159/insert.php");
+        HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
 
         try{
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();

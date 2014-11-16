@@ -11,12 +11,12 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:text="@string/app_name"
+            android:layout_height="150dp"
+            android:text="Enter a username and password:"
             android:autoLink="all"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-thin"
             android:textStyle="bold"
-            android:textSize="60dp"
+            android:textSize="20dp"
             android:editable="false"
             android:gravity="center"
             android:layout_alignParentTop="true"
@@ -53,53 +53,16 @@
             android:layout_marginBottom="10dp" />
 
         <Button
-            android:id="@+id/buttonlogIn"
+            android:id="@+id/buttonContinue"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:onClick="login"
+            android:text="@string/continueOn"
+            android:onClick="continueOn"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
             android:layout_marginTop="20dp" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:id="@+id/container3"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/not_registered"
-            android:fontFamily="sans-serif-thin"
-            android:textStyle="normal"
-            android:layout_marginBottom="10dp"
-            android:textSize="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/sign_up"
-            android:fontFamily="sans-serif-thin"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/blue"
-            android:textSize="15dp"
-            android:onClick="signUpUser"
-            android:clickable="true"
-            android:textColorHighlight="@color/blue"
-            android:textColorHint="@color/blue"
-            android:textColorLink="@color/blue"
-            android:textStyle="bold" />
-    </LinearLayout>
-
 
 </LinearLayout>
 

@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 
 public class SetupTutorActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +53,7 @@ public class SetupTutorActivity extends Activity {
 
     /* Called when the user clicks the Submit button */
     public void submit(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SetupLoginActivity.class);
 
         // Collect data from inputs
         EditText firstName = (EditText) findViewById(R.id.inputFirstName);
@@ -66,12 +64,12 @@ public class SetupTutorActivity extends Activity {
         EditText hourlyRate = (EditText) findViewById(R.id.inputHourlyRate);
 
         // Convert to strings
-        String firstNameString = firstName.getText().toString();
-        String lastNameString = lastName.getText().toString();
-        String emailAddressString = emailAddress.getText().toString();
+        String firstNameString = firstName.getText().toString().trim();
+        String lastNameString = lastName.getText().toString().trim();
+        String emailAddressString = emailAddress.getText().toString().trim();
         String phoneNumberString = phoneNumber.getText().toString();
-        String levelOfEducationString = levelOfEducationSpinner.getSelectedItem().toString();
-        String hourlyRateString = hourlyRate.getText().toString();
+        String levelOfEducationString = levelOfEducationSpinner.getSelectedItem().toString().trim();
+        String hourlyRateString = hourlyRate.getText().toString().trim();
 
         // Check if all fields have been filled out
 //        TODO check format types like phone number has dashes
@@ -90,9 +88,8 @@ public class SetupTutorActivity extends Activity {
             new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
                     phoneNumberString, levelOfEducationString, hourlyRateString);
 
-            // Mark that the setup was completed and the user is now logged in
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
-//            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
+            // Send user type
+            intent.putExtra(MainActivity.EXTRA_MESSAGE, "tutor");
             startActivity(intent);
         }
     }
@@ -101,7 +98,7 @@ public class SetupTutorActivity extends Activity {
                          String phoneNumber, String levelOfEducation, String hourlyRate)
     {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://107.170.241.159/insert.php");
+        HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
 
         try{
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
