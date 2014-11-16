@@ -15,15 +15,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -95,8 +90,9 @@ public class SetupTutorActivity extends Activity {
             new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
                     phoneNumberString, levelOfEducationString, hourlyRateString);
 
-            // Mark that the setup was completed
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
+            // Mark that the setup was completed and the user is now logged in
+            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
+//            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
             startActivity(intent);
         }
     }
@@ -108,7 +104,8 @@ public class SetupTutorActivity extends Activity {
         HttpPost httppost = new HttpPost("http://107.170.241.159/insert.php");
 
         try{
-            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("type", "tutor"));
             nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
             nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));
