@@ -2,12 +2,29 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
 
 
 public class SetupTutorActivity extends Activity {
@@ -74,19 +91,44 @@ public class SetupTutorActivity extends Activity {
         } else if (hourlyRateString.trim().equals("")) {
             hourlyRate.setError("Hourly rate is required!");
         } else {
-//            // Send with the intent as a bundle
-//            Bundle extras = new Bundle();
-//            extras.putString(EXTRA_MESSAGE + ".FIRST_NAME", firstNameString);
-//            extras.putString(EXTRA_MESSAGE + ".LAST_NAME", lastNameString);
-//            extras.putString(EXTRA_MESSAGE + ".EMAIL_ADDRESS", emailAddressString);
-//            extras.putString(EXTRA_MESSAGE + ".PHONE_NUMBER", phoneNumberString);
-//            extras.putString(EXTRA_MESSAGE + ".LEVEL_OF_EDUCATION", levelOfEducationString);
-//            extras.putString(EXTRA_MESSAGE + ".HOURLY_RATE", hourlyRateString);
-//            intent.putExtras(extras);
+            // Insert the data into the database
+            new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
+                    phoneNumberString, levelOfEducationString, hourlyRateString);
 
             // Mark that the setup was completed
             MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
             startActivity(intent);
+        }
+    }
+
+    public void postData(String firstName, String lastName, String emailAddress,
+                         String phoneNumber, String levelOfEducation, String hourlyRate)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://107.170.241.159/insert.php");
+
+        try{
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
+            nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
+            nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));
+            nameValuePairs.add(new BasicNameValuePair("phonenumber", phoneNumber));
+            nameValuePairs.add(new BasicNameValuePair("levelofeducation", levelOfEducation));
+            nameValuePairs.add(new BasicNameValuePair("hourlyrate", hourlyRate));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+        }
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error:  "+e.toString());
+        }
+    }
+
+    private class SummaryAsyncTask extends AsyncTask<String, Void, Void> {
+
+        protected Void doInBackground(String... params){
+            postData(params[0], params[1], params[2], params[3], params[4], params[5]);
+            return null;
         }
     }
 }
