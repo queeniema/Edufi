@@ -2,16 +2,27 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
 
 public class SetupStudentActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +64,11 @@ public class SetupStudentActivity extends Activity {
         final Spinner yearInSchoolSpinner = (Spinner) findViewById(R.id.spinnerYearInSchool);
 
         // Convert to strings
-        String firstNameString = firstName.getText().toString();
-        String lastNameString = lastName.getText().toString();
-        String emailAddressString = emailAddress.getText().toString();
-        String phoneNumberString = phoneNumber.getText().toString();
-        String yearInSchoolString = yearInSchoolSpinner.getSelectedItem().toString();
+        String firstNameString = firstName.getText().toString().trim();
+        String lastNameString = lastName.getText().toString().trim();
+        String emailAddressString = emailAddress.getText().toString().trim();
+        String phoneNumberString = phoneNumber.getText().toString().trim();
+        String yearInSchoolString = yearInSchoolSpinner.getSelectedItem().toString().trim();
 
         // Check if all fields have been filled out
 //        TODO check format types like phone number has dashes
@@ -70,6 +81,15 @@ public class SetupStudentActivity extends Activity {
         } else if (phoneNumberString.trim().equals("")) {
             phoneNumber.setError("Phone number is required!");
         } else {
+            // Insert the data into the database
+            new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
+                    phoneNumberString, yearInSchoolString);
+
+            // Send user type
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "student");
+            editor.commit();
+
 //            // Send with the intent as a bundle
 //            Bundle extras = new Bundle();
 //            extras.putString(EXTRA_MESSAGE + ".FIRST_NAME", firstNameString);
@@ -79,9 +99,41 @@ public class SetupStudentActivity extends Activity {
 //            extras.putString(EXTRA_MESSAGE + ".YEAR_IN_SCHOOL", yearInSchoolString);
 //            intent.putExtras(extras);
 
-            // Mark that the setup was completed
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
             startActivity(intent);
+        }
+    }
+
+    public void postData(String firstName, String lastName, String emailAddress,
+                         String phoneNumber, String yearInSchool)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
+
+        try{
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("type", "student"));
+//            Log.e("log_tag", "ID IN SETUPSTUDENT:  " + userId);
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
+            nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
+            nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
+            nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));
+            nameValuePairs.add(new BasicNameValuePair("phonenumber", phoneNumber));
+            nameValuePairs.add(new BasicNameValuePair("yearinschool", yearInSchool));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+        }
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error:  " + e.toString());
+        }
+    }
+
+    private class SummaryAsyncTask extends AsyncTask<String, Void, Void> {
+
+        protected Void doInBackground(String... params){
+            postData(params[0], params[1], params[2], params[3], params[4]);
+            return null;
         }
     }
 }

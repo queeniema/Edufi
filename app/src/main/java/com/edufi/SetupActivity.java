@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 
-public class SetupActivity
-        extends Activity {
+public class SetupActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

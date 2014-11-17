@@ -10,58 +10,60 @@
         android:id="@+id/container" >
 
         <TextView
-            android:id="@+id/what_are_you"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:text="@string/user_type_question"
+            android:layout_height="150dp"
+            android:text="Enter a username and password:"
             android:autoLink="all"
             android:fontFamily="sans-serif-thin"
-            android:textStyle="normal"
-            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
             android:editable="false"
             android:gravity="center"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp" />
+            android:layout_marginTop="50dp"
+            android:focusableInTouchMode="true" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:id="@+id/container2"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
 
-        <Button
-            android:id="@+id/tutor"
-            android:layout_width="150dp"
+        <EditText
+            android:id="@+id/inputUsername"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="@string/tutor"
-            android:onClick="setupTutor"
-            android:textSize="25dp"
+            android:hint="@string/login_username"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_weight="1" />
+            android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/centerPoint"
-            android:text=""
-            android:layout_width="50dp"
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="10" />
-
-        <Button
-            android:id="@+id/student"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="@string/student"
-            android:onClick="setupStudent"
-            android:textSize="25dp"
+            android:hint="@string/login_password"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_weight="1" />
+            android:layout_marginBottom="10dp"
+            android:inputType="textPassword"
+            android:password="true" />
+
+        <Button
+            android:id="@+id/buttonContinue"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/continueOn"
+            android:onClick="continueOn"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:layout_marginTop="20dp" />
+
     </LinearLayout>
 
 </LinearLayout>

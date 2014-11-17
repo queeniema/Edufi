@@ -3,6 +3,7 @@ package com.edufi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,20 +16,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 
 
 public class SetupTutorActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,12 +66,12 @@ public class SetupTutorActivity extends Activity {
         EditText hourlyRate = (EditText) findViewById(R.id.inputHourlyRate);
 
         // Convert to strings
-        String firstNameString = firstName.getText().toString();
-        String lastNameString = lastName.getText().toString();
-        String emailAddressString = emailAddress.getText().toString();
+        String firstNameString = firstName.getText().toString().trim();
+        String lastNameString = lastName.getText().toString().trim();
+        String emailAddressString = emailAddress.getText().toString().trim();
         String phoneNumberString = phoneNumber.getText().toString();
-        String levelOfEducationString = levelOfEducationSpinner.getSelectedItem().toString();
-        String hourlyRateString = hourlyRate.getText().toString();
+        String levelOfEducationString = levelOfEducationSpinner.getSelectedItem().toString().trim();
+        String hourlyRateString = hourlyRate.getText().toString().trim();
 
         // Check if all fields have been filled out
 //        TODO check format types like phone number has dashes
@@ -95,8 +90,21 @@ public class SetupTutorActivity extends Activity {
             new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
                     phoneNumberString, levelOfEducationString, hourlyRateString);
 
-            // Mark that the setup was completed
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
+//            // Send with the intent as a bundle
+//            Bundle extras = new Bundle();
+//            extras.putString(EXTRA_MESSAGE + ".FIRST_NAME", firstNameString);
+//            extras.putString(EXTRA_MESSAGE + ".LAST_NAME", lastNameString);
+//            extras.putString(EXTRA_MESSAGE + ".EMAIL_ADDRESS", emailAddressString);
+//            extras.putString(EXTRA_MESSAGE + ".PHONE_NUMBER", phoneNumberString);
+//            extras.putString(EXTRA_MESSAGE + ".LEVEL_OF_EDUCATION", levelOfEducationString);
+//            extras.putString(EXTRA_MESSAGE + ".HOURLY_RATE", hourlyRateString);
+//            intent.putExtras(extras);
+
+            // Send user type
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "tutor");
+            editor.commit();
+
             startActivity(intent);
         }
     }
@@ -105,10 +113,13 @@ public class SetupTutorActivity extends Activity {
                          String phoneNumber, String levelOfEducation, String hourlyRate)
     {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://107.170.241.159/insert.php");
+        HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
 
         try{
-            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("type", "tutor"));
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
             nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
             nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));

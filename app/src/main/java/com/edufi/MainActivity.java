@@ -5,6 +5,7 @@ import com.edufi.model.NavDrawerItem;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -20,13 +21,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+
     // Used to check whether initial setup has been completed
     public static SharedPreferences savedPreferences;
-    public static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
+    public static final String PREF_LOGGED_IN = "com.edufi.logged_in";
+    public static final String USER_ID = "com.edufi.user_id";
+    public static final String USER_TYPE = "com.edufi.user_type";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -49,10 +54,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check if setup has been completed
+        // Check if user is already logged in
         savedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(savedPreferences.getBoolean(PREF_SHOW_ON_APP_START, true)){
-            Intent intent = new Intent(this, SetupActivity.class);
+        if(savedPreferences.getBoolean(PREF_LOGGED_IN, true)){
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
