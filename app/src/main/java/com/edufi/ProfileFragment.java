@@ -53,7 +53,9 @@ public class ProfileFragment extends Fragment {
             Bundle savedInstanceState) {
         View rootView;
 
-        if (MainActivity.userType == "tutor") {
+        String userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
+
+        if (userType.equals("tutor")) {
             rootView = inflater.inflate (R.layout.activity_tutor_profile,container,false);
             nameTextView = (TextView) rootView.findViewById(R.id.name);
             emailAddressTextView = (TextView) rootView.findViewById(R.id.emailAddress);
@@ -74,6 +76,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private class LongOperation extends AsyncTask<String, Void, String> {
+
+        String userId;
+        String userType;
         protected void onPreExecute() {
 
         }
@@ -81,10 +86,13 @@ public class ProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... arg0) {
             try {
-                Log.e("log_result", "ID IN PROFILE IS " + MainActivity.id);
+                userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+                userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
+
+//                Log.e("log_result", "ID IN PROFILE IS " + userId);
                 String link = "http://107.170.241.159/queenie/get.php?id="
-                        + MainActivity.id + "&type=" + MainActivity.userType;
-                Log.e("log_result", "USERTYPE IN PROFILE IS " + MainActivity.userType);
+                        + userId + "&type=" + userType;
+//                Log.e("log_result", "USERTYPE IN PROFILE IS " + userType);
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -109,16 +117,18 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             try {
-                if (MainActivity.userType == "tutor") {
+                userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+                userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
+                if (userType.equals("tutor")) {
                     JSONArray jArray = new JSONArray(result);
-                    Log.e("log_result", "RESULT IS " + jArray);
+//                    Log.e("log_result", "RESULT IS " + jArray);
                     for (int i = 0; i < jArray.length(); i++) {
                         JSONObject json_data = jArray.getJSONObject(i);
                         firstName = json_data.getString("firstName");
                         lastName = json_data.getString("lastName");
                         emailAddress = json_data.getString("emailAddress");
                         phoneNumber = json_data.getString("phoneNumber");
-                        Log.e("log_result", "USERTYPE(!!!!) IN PROFILE IS " + MainActivity.userType);
+//                        Log.e("log_result", "USERTYPE(!!!!) IN PROFILE IS " + userType);
                         levelOfEducation = json_data.getString("levelOfEducation");
                         hourlyRate = json_data.getString("hourlyRate");
                     }
@@ -131,7 +141,7 @@ public class ProfileFragment extends Fragment {
                         lastName = json_data.getString("lastName");
                         emailAddress = json_data.getString("emailAddress");
                         phoneNumber = json_data.getString("phoneNumber");
-                        Log.e("log_result", "USERTYPE2(!!!!) IN PROFILE IS " + MainActivity.userType);
+//                        Log.e("log_result", "USERTYPE2(!!!!) IN PROFILE IS " + userType);
                         yearInSchool = json_data.getString("yearInSchool");
                     }
                 }
@@ -142,10 +152,10 @@ public class ProfileFragment extends Fragment {
             nameTextView.setText(firstName+" "+lastName);
             emailAddressTextView.setText(emailAddress);
             phoneNumberTextView.setText(phoneNumber);
-            Log.e("log_result", "LEVEL IN PROFILE IS " + levelOfEducation);
-            Log.e("log_result", "HOURLY RATE IN PROFILE IS " + hourlyRate);
-            Log.e("log_result", "YEAR IN SCHOOL IN PROFILE IS " + yearInSchool);
-            if (MainActivity.userType == "tutor") {
+//            Log.e("log_result", "LEVEL IN PROFILE IS " + levelOfEducation);
+//            Log.e("log_result", "HOURLY RATE IN PROFILE IS " + hourlyRate);
+//            Log.e("log_result", "YEAR IN SCHOOL IN PROFILE IS " + yearInSchool);
+            if (userType.equals("tutor")) {
                 levelOfEducationTextView.setText(levelOfEducation);
                 hourlyRateTextView.setText(hourlyRate);
             } else {

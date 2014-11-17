@@ -2,6 +2,7 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,22 +27,21 @@ import java.util.ArrayList;
 
 public class SetupLoginActivity extends Activity {
     private String userType;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get the message from the intent
-        Intent intent = getIntent();
         // Set user type globally
-        MainActivity.userType = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
 
         setContentView(R.layout.activity_setup_login);
     }
 
     /* Called when the user clicks the Continue button */
     public void continueOn(View view) {
-        Intent intent = new Intent(this, SetupActivity.class);
+        intent = new Intent(this, SetupActivity.class);
 
         // Collect data from inputs
         EditText username = (EditText) findViewById(R.id.inputUsername);
@@ -59,11 +59,8 @@ public class SetupLoginActivity extends Activity {
             password.setError("Password is required!");
         } else {
             // Insert the data into the database
-            new SummaryAsyncTask().execute(usernameString, passwordString, MainActivity.userType);
+            new SummaryAsyncTask().execute(usernameString, passwordString, userType);
 
-            // Mark that the user has logged in
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
-            startActivity(intent);
         }
     }
 
@@ -94,8 +91,13 @@ public class SetupLoginActivity extends Activity {
             try{
                 JSONObject object = new JSONObject(result);
                 // Store the id of the user
-                MainActivity.id = object.getString("id");
-                Log.e("log_tag", "ID IN SETUPLOGIN:  " + MainActivity.id);
+                SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+                editor.putString(MainActivity.USER_ID, object.getString("id"));
+                // Mark that the user has logged in
+                editor.putBoolean(MainActivity.PREF_LOGGED_IN, false);
+                editor.commit();
+                startActivity(intent);
+//                Log.e("log_tag", "ID IN SETUPLOGIN:  " + object.getString("id"));
             }
             catch(JSONException e){
                 Log.e("log_tag", "Error parsing data " + e.toString());

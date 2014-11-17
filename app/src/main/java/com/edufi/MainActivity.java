@@ -26,16 +26,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
-
-    public static String id;
-    public static String userType;
 
     // Used to check whether initial setup has been completed
     public static SharedPreferences savedPreferences;
     public static final String PREF_LOGGED_IN = "com.edufi.logged_in";
-//    logged_in static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
-    public static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
+    public static final String USER_ID = "com.edufi.user_id";
     public static final String USER_TYPE = "com.edufi.user_type";
 
     private DrawerLayout mDrawerLayout;

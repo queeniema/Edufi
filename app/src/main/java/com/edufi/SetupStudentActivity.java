@@ -23,7 +23,6 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 
 public class SetupStudentActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.edufi";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,9 @@ public class SetupStudentActivity extends Activity {
                     phoneNumberString, yearInSchoolString);
 
             // Send user type
-            intent.putExtra(MainActivity.EXTRA_MESSAGE, "student");
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "student");
+            editor.commit();
 
 //            // Send with the intent as a bundle
 //            Bundle extras = new Bundle();
@@ -97,12 +98,6 @@ public class SetupStudentActivity extends Activity {
 //            extras.putString(EXTRA_MESSAGE + ".PHONE_NUMBER", phoneNumberString);
 //            extras.putString(EXTRA_MESSAGE + ".YEAR_IN_SCHOOL", yearInSchoolString);
 //            intent.putExtras(extras);
-
-            // Mark that the setup was completed
-            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
-            editor.putString(MainActivity.USER_TYPE, "student");
-            editor.putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false);
-            editor.commit();
 
             startActivity(intent);
         }
@@ -115,10 +110,11 @@ public class SetupStudentActivity extends Activity {
         HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
 
         try{
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("type", "student"));
-            Log.e("log_tag", "ID IN SETUPSTUDENT:  " + MainActivity.id);
-            nameValuePairs.add(new BasicNameValuePair("id", MainActivity.id));
+//            Log.e("log_tag", "ID IN SETUPSTUDENT:  " + userId);
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
             nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
             nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));

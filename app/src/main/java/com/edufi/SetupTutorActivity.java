@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 
 public class SetupTutorActivity extends Activity {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +90,6 @@ public class SetupTutorActivity extends Activity {
             new SummaryAsyncTask().execute(firstNameString, lastNameString, emailAddressString,
                     phoneNumberString, levelOfEducationString, hourlyRateString);
 
-            // Send user type
-            intent.putExtra(MainActivity.EXTRA_MESSAGE, "tutor");
 //            // Send with the intent as a bundle
 //            Bundle extras = new Bundle();
 //            extras.putString(EXTRA_MESSAGE + ".FIRST_NAME", firstNameString);
@@ -101,10 +100,9 @@ public class SetupTutorActivity extends Activity {
 //            extras.putString(EXTRA_MESSAGE + ".HOURLY_RATE", hourlyRateString);
 //            intent.putExtras(extras);
 
-            // Mark that the setup was completed
+            // Send user type
             SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
             editor.putString(MainActivity.USER_TYPE, "tutor");
-            editor.putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false);
             editor.commit();
 
             startActivity(intent);
@@ -118,9 +116,10 @@ public class SetupTutorActivity extends Activity {
         HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
 
         try{
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("type", "tutor"));
-            nameValuePairs.add(new BasicNameValuePair("id", MainActivity.id));
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
             nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
             nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));

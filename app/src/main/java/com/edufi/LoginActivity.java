@@ -2,6 +2,7 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 
 public class LoginActivity extends Activity {
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class LoginActivity extends Activity {
 
     /* Called when the user clicks the Log In button */
     public void login(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        intent = new Intent(this, MainActivity.class);
         // Collect data from inputs
         EditText username = (EditText) findViewById(R.id.inputUsername);
         EditText password = (EditText) findViewById(R.id.inputPassword);
@@ -54,9 +56,7 @@ public class LoginActivity extends Activity {
             // Insert the data into the database
             new SummaryAsyncTask().execute(usernameString, passwordString);
 
-            // Mark that the user has logged in
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
-            startActivity(intent);
+
         }
     }
 
@@ -95,11 +95,17 @@ public class LoginActivity extends Activity {
                 for(int i = 0; i < jArray.length(); i++) {
                     JSONObject json_data = jArray.getJSONObject(i);
                     // Store the id of the user
-                    MainActivity.id = json_data.getString("id");
-                    MainActivity.userType = json_data.getString("type");
-                    Log.e("log_tag", "ID IN LOGINACTIVITY:  " + MainActivity.id);
-                    Log.e("log_tag", "TYPE IN LOGINACTIVITY:  " + MainActivity.userType);
+                    SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+                    editor.putString(MainActivity.USER_ID, json_data.getString("id"));
+                    editor.putString(MainActivity.USER_TYPE, json_data.getString("type"));
+                    // Mark that the user has logged in
+                    editor.putBoolean(MainActivity.PREF_LOGGED_IN, false);
+                    editor.commit();
+//                    Log.e("log_tag", "ID IN LOGINACTIVITY:  " + json_data.getString("id"));
+//                    Log.e("log_tag", "TYPE IN LOGINACTIVITY:  " + json_data.getString("type"));
                 }
+
+                startActivity(intent);
             }
             catch(JSONException e){
                 Log.e("log_tag", "Error parsing data " + e.toString());
