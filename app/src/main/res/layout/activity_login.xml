@@ -50,7 +50,9 @@
             android:hint="@string/login_password"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:inputType="textPassword"
+            android:password="true" />
 
         <Button
             android:id="@+id/buttonlogIn"

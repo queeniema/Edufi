@@ -30,31 +30,45 @@ public class ProfileFragment extends Fragment {
     String lastName;
     String emailAddress;
     String phoneNumber;
+    // for tutors
     String levelOfEducation;
     String hourlyRate;
+    // for students
+    String yearInSchool;
+
     TextView nameTextView = null;
     TextView emailAddressTextView = null;
     TextView phoneNumberTextView = null;
+    // for tutors
     TextView levelOfEducationTextView = null;
     TextView hourlyRateTextView = null;
+    // for students
+    TextView yearInSchoolTextView = null;
+
     AsyncTask at = new LongOperation().execute("");
     public ProfileFragment(){}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate (R.layout.fragment_profile,container,false);
+        View rootView;
 
-        nameTextView = (TextView) rootView.findViewById(R.id.name);
-//        newTextView.setText("FIRST"+" "+"LAST");
-        emailAddressTextView = (TextView) rootView.findViewById(R.id.emailAddress);
-//        newTextView.setText("TEST@GMAIL.COM");
-        phoneNumberTextView = (TextView) rootView.findViewById(R.id.phoneNumber);
-//        newTextView.setText("123-111-333");
-        levelOfEducationTextView = (TextView) rootView.findViewById(R.id.levelOfEducation);
-//        newTextView.setText(getString(R.string.level_of_education)+"\n"+"High School");
-        hourlyRateTextView = (TextView) rootView.findViewById(R.id.hourlyRate);
-//        newTextView.setText("$"+"20.00"+"/hour");
+        if (MainActivity.userType == "tutor") {
+            rootView = inflater.inflate (R.layout.activity_tutor_profile,container,false);
+            nameTextView = (TextView) rootView.findViewById(R.id.name);
+            emailAddressTextView = (TextView) rootView.findViewById(R.id.emailAddress);
+            phoneNumberTextView = (TextView) rootView.findViewById(R.id.phoneNumber);
+            levelOfEducationTextView = (TextView) rootView.findViewById(R.id.levelOfEducation);
+            hourlyRateTextView = (TextView) rootView.findViewById(R.id.hourlyRate);
+        }
+      else {
+            rootView = inflater.inflate (R.layout.activity_student_profile,container,false);
+            nameTextView = (TextView) rootView.findViewById(R.id.name);
+            emailAddressTextView = (TextView) rootView.findViewById(R.id.emailAddress);
+            phoneNumberTextView = (TextView) rootView.findViewById(R.id.phoneNumber);
+            yearInSchoolTextView = (TextView) rootView.findViewById(R.id.yearInSchool);
+        }
+
         AsyncTask at = new LongOperation().execute("");
         return rootView;
     }
@@ -67,8 +81,10 @@ public class ProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... arg0) {
             try {
-                String link = "http://107.170.241.159/get.php?firstname="
-                        + "Michelle" + "&lastname=" + "Obama";
+                Log.e("log_result", "ID IN PROFILE IS " + MainActivity.id);
+                String link = "http://107.170.241.159/queenie/get.php?id="
+                        + MainActivity.id + "&type=" + MainActivity.userType;
+                Log.e("log_result", "USERTYPE IN PROFILE IS " + MainActivity.userType);
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -92,16 +108,32 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            try{
-                JSONArray jArray = new JSONArray(result);
-                for(int i = 0; i < jArray.length(); i++) {
-                    JSONObject json_data = jArray.getJSONObject(i);
-                    firstName = json_data.getString("firstName");
-                    lastName = json_data.getString("lastName");
-                    emailAddress = json_data.getString("emailAddress");
-                    phoneNumber = json_data.getString("phoneNumber");
-                    levelOfEducation = json_data.getString("levelOfEducation");
-                    hourlyRate = json_data.getString("hourlyRate");
+            try {
+                if (MainActivity.userType == "tutor") {
+                    JSONArray jArray = new JSONArray(result);
+                    Log.e("log_result", "RESULT IS " + jArray);
+                    for (int i = 0; i < jArray.length(); i++) {
+                        JSONObject json_data = jArray.getJSONObject(i);
+                        firstName = json_data.getString("firstName");
+                        lastName = json_data.getString("lastName");
+                        emailAddress = json_data.getString("emailAddress");
+                        phoneNumber = json_data.getString("phoneNumber");
+                        Log.e("log_result", "USERTYPE(!!!!) IN PROFILE IS " + MainActivity.userType);
+                        levelOfEducation = json_data.getString("levelOfEducation");
+                        hourlyRate = json_data.getString("hourlyRate");
+                    }
+                } else {
+                    JSONArray jArray = new JSONArray(result);
+                    Log.e("log_result", "RESULT IS " + jArray);
+                    for (int i = 0; i < jArray.length(); i++) {
+                        JSONObject json_data = jArray.getJSONObject(i);
+                        firstName = json_data.getString("firstName");
+                        lastName = json_data.getString("lastName");
+                        emailAddress = json_data.getString("emailAddress");
+                        phoneNumber = json_data.getString("phoneNumber");
+                        Log.e("log_result", "USERTYPE2(!!!!) IN PROFILE IS " + MainActivity.userType);
+                        yearInSchool = json_data.getString("yearInSchool");
+                    }
                 }
             }
             catch(JSONException e){
@@ -110,8 +142,16 @@ public class ProfileFragment extends Fragment {
             nameTextView.setText(firstName+" "+lastName);
             emailAddressTextView.setText(emailAddress);
             phoneNumberTextView.setText(phoneNumber);
-            levelOfEducationTextView.setText(levelOfEducation);
-            hourlyRateTextView.setText(hourlyRate);
+            Log.e("log_result", "LEVEL IN PROFILE IS " + levelOfEducation);
+            Log.e("log_result", "HOURLY RATE IN PROFILE IS " + hourlyRate);
+            Log.e("log_result", "YEAR IN SCHOOL IN PROFILE IS " + yearInSchool);
+            if (MainActivity.userType == "tutor") {
+                levelOfEducationTextView.setText(levelOfEducation);
+                hourlyRateTextView.setText(hourlyRate);
+            } else {
+                yearInSchoolTextView.setText(yearInSchool);
+            }
+
         }
     }
 

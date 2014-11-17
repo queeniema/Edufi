@@ -28,6 +28,7 @@ import android.widget.ListView;
 public class MainActivity extends Activity {
     public final static String EXTRA_MESSAGE = "com.edufi";
 
+    public static String id;
     public static String userType;
 
     // Used to check whether initial setup has been completed

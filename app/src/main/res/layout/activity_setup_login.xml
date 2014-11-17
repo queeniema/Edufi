@@ -50,7 +50,9 @@
             android:hint="@string/login_password"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:inputType="textPassword"
+            android:password="true" />
 
         <Button
             android:id="@+id/buttonContinue"
@@ -65,76 +67,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
-
-
-
-    <!--<LinearLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:orientation="vertical" >-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/container" >-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/what_are_you"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="200dp"-->
-            <!--android:text="@string/user_type_question"-->
-            <!--android:autoLink="all"-->
-            <!--android:fontFamily="sans-serif-thin"-->
-            <!--android:textStyle="normal"-->
-            <!--android:textSize="30dp"-->
-            <!--android:editable="false"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="50dp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:id="@+id/container2"-->
-        <!--android:layout_marginLeft="30dp"-->
-        <!--android:layout_marginRight="30dp">-->
-
-        <!--<Button-->
-            <!--android:id="@+id/tutor"-->
-            <!--android:layout_width="150dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/tutor"-->
-            <!--android:onClick="setupTutor"-->
-            <!--android:textSize="25dp"-->
-            <!--android:fontFamily="sans-serif-thin"-->
-            <!--android:textStyle="normal"-->
-            <!--android:layout_weight="1" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/centerPoint"-->
-            <!--android:text=""-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_weight="10" />-->
-
-        <!--<Button-->
-            <!--android:id="@+id/student"-->
-            <!--android:layout_width="150dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/student"-->
-            <!--android:onClick="setupStudent"-->
-            <!--android:textSize="25dp"-->
-            <!--android:fontFamily="sans-serif-thin"-->
-            <!--android:textStyle="normal"-->
-            <!--android:layout_weight="1" />-->
-    <!--</LinearLayout>-->
-
-<!--</LinearLayout>-->
-
-

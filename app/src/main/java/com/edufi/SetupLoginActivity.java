@@ -15,7 +15,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -36,7 +41,8 @@ public class SetupLoginActivity extends Activity {
 
     /* Called when the user clicks the Continue button */
     public void continueOn(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SetupActivity.class);
+
         // Collect data from inputs
         EditText username = (EditText) findViewById(R.id.inputUsername);
         EditText password = (EditText) findViewById(R.id.inputPassword);
@@ -54,18 +60,11 @@ public class SetupLoginActivity extends Activity {
         } else {
             // Insert the data into the database
             new SummaryAsyncTask().execute(usernameString, passwordString, MainActivity.userType);
-//
+
             // Mark that the user has logged in
             MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_LOGGED_IN, false).commit();
             startActivity(intent);
         }
-    }
-
-    /* Called when the user clicks the Sign Up button */
-    public void signUpUser(View view) {
-        // Redirect user to setup
-        Intent intent = new Intent(this, SetupActivity.class);
-        startActivity(intent);
     }
 
     public void postData(String username, String password, String userType)
@@ -81,6 +80,26 @@ public class SetupLoginActivity extends Activity {
             nameValuePairs.add(new BasicNameValuePair("usertype", userType));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
+            BufferedReader in = new BufferedReader
+                    (new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer sb = new StringBuffer("");
+            String line = "";
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
+                break;
+            }
+            in.close();
+            String result = sb.toString();
+            try{
+                JSONObject object = new JSONObject(result);
+                // Store the id of the user
+                MainActivity.id = object.getString("id");
+                Log.e("log_tag", "ID IN SETUPLOGIN:  " + MainActivity.id);
+            }
+            catch(JSONException e){
+                Log.e("log_tag", "Error parsing data " + e.toString());
+            }
         }
         catch(Exception e)
         {

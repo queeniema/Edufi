@@ -53,7 +53,7 @@ public class SetupStudentActivity extends Activity {
 
     /* Called when the user clicks the Submit button */
     public void submit(View view) {
-        Intent intent = new Intent(this, SetupLoginActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
 
         // Collect data from inputs
         EditText firstName = (EditText) findViewById(R.id.inputFirstName);
@@ -99,6 +99,8 @@ public class SetupStudentActivity extends Activity {
         try{
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("type", "student"));
+            Log.e("log_tag", "ID IN SETUPSTUDENT:  " + MainActivity.id);
+            nameValuePairs.add(new BasicNameValuePair("id", MainActivity.id));
             nameValuePairs.add(new BasicNameValuePair("firstname", firstName));
             nameValuePairs.add(new BasicNameValuePair("lastname", lastName));
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));
