@@ -3,6 +3,7 @@ package com.edufi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,8 +22,9 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 
-
 public class SetupStudentActivity extends Activity {
+    public final static String EXTRA_MESSAGE = "com.edufi";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,22 @@ public class SetupStudentActivity extends Activity {
 
             // Send user type
             intent.putExtra(MainActivity.EXTRA_MESSAGE, "student");
+
+//            // Send with the intent as a bundle
+//            Bundle extras = new Bundle();
+//            extras.putString(EXTRA_MESSAGE + ".FIRST_NAME", firstNameString);
+//            extras.putString(EXTRA_MESSAGE + ".LAST_NAME", lastNameString);
+//            extras.putString(EXTRA_MESSAGE + ".EMAIL_ADDRESS", emailAddressString);
+//            extras.putString(EXTRA_MESSAGE + ".PHONE_NUMBER", phoneNumberString);
+//            extras.putString(EXTRA_MESSAGE + ".YEAR_IN_SCHOOL", yearInSchoolString);
+//            intent.putExtras(extras);
+
+            // Mark that the setup was completed
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "student");
+            editor.putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false);
+            editor.commit();
+
             startActivity(intent);
         }
     }

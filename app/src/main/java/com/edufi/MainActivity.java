@@ -35,6 +35,8 @@ public class MainActivity extends Activity {
     public static SharedPreferences savedPreferences;
     public static final String PREF_LOGGED_IN = "com.edufi.logged_in";
 //    logged_in static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
+    public static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
+    public static final String USER_TYPE = "com.edufi.user_type";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
