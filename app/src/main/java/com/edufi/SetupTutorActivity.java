@@ -2,6 +2,7 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +86,10 @@ public class SetupTutorActivity extends Activity {
 //            intent.putExtras(extras);
 
             // Mark that the setup was completed
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "tutor");
+            editor.putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false);
+            editor.commit();
             startActivity(intent);
         }
     }

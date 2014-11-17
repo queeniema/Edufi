@@ -2,12 +2,14 @@ package com.edufi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 
 
 public class SetupStudentActivity extends Activity {
@@ -80,7 +82,10 @@ public class SetupStudentActivity extends Activity {
 //            intent.putExtras(extras);
 
             // Mark that the setup was completed
-            MainActivity.savedPreferences.edit().putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false).commit();
+            SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+            editor.putString(MainActivity.USER_TYPE, "student");
+            editor.putBoolean(MainActivity.PREF_SHOW_ON_APP_START, false);
+            editor.commit();
             startActivity(intent);
         }
     }

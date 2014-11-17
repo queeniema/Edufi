@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     // Used to check whether initial setup has been completed
     public static SharedPreferences savedPreferences;
     public static final String PREF_SHOW_ON_APP_START = "com.edufi.first_time";
+    public static final String USER_TYPE = "com.edufi.user_type";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
