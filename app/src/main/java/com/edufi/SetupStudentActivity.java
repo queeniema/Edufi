@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -19,10 +20,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SetupStudentActivity extends Activity {
+    private List<String> subjects = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,44 @@ public class SetupStudentActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /* Called when user checks a checkbox */
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkboxMath:
+                if (checked) {
+                    subjects.add("Math");
+                } else {
+                    subjects.remove("Math");
+                }
+                break;
+            case R.id.checkboxScience:
+                if (checked) {
+                    subjects.add("Science");
+                } else {
+                    subjects.remove("Science");
+                }
+                break;
+            case R.id.checkboxEnglish:
+                if (checked) {
+                    subjects.add("English");
+                } else {
+                    subjects.remove("English");
+                }
+                break;
+            case R.id.checkboxSocialSciences:
+                if (checked) {
+                    subjects.add("Social Sciences");
+                } else {
+                    subjects.remove("Social Sciences");
+                }
+                break;
+        }
     }
 
     /* Called when the user clicks the Submit button */
@@ -120,6 +163,7 @@ public class SetupStudentActivity extends Activity {
             nameValuePairs.add(new BasicNameValuePair("emailaddress", emailAddress));
             nameValuePairs.add(new BasicNameValuePair("phonenumber", phoneNumber));
             nameValuePairs.add(new BasicNameValuePair("yearinschool", yearInSchool));
+            nameValuePairs.add(new BasicNameValuePair("subjects", new JSONArray(Arrays.asList(subjects)).toString()));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
         }

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/container"
         android:orientation="horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginBottom="10dp">
@@ -76,7 +76,9 @@
         <Spinner
             android:id="@+id/spinnerLevelOfEducation"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -87,33 +89,81 @@
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal" />
 
-        <CheckBox
-            android:id="@+id/checkboxMath"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Math"
+            android:id="@+id/checkboxContainer"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_marginBottom="5dp" />
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/checkboxScience"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Science"
-            android:fontFamily="sans-serif-thin"
-            android:textStyle="normal"
-            android:layout_marginBottom="5dp"
-            android:checked="false" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/container3"
+                android:fontFamily="sans-serif-thin"
+                android:textStyle="normal"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginRight="40dp">
 
-        <!--<CheckBox-->
-            <!--android:id="@+id/checkboxEnglish"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="English"-->
-            <!--android:fontFamily="sans-serif-thin"-->
-            <!--android:textStyle="normal"-->
-            <!--android:layout_marginBottom="20dp" />-->
+                <CheckBox
+                    android:id="@+id/checkboxMath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Math"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+                <CheckBox
+                    android:id="@+id/checkboxScience"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Science"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/container4"
+                android:orientation="vertical"
+                android:fontFamily="sans-serif-thin"
+                android:textStyle="normal"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/checkboxEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+                <CheckBox
+                    android:id="@+id/checkboxSocialSciences"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Social Sciences"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/inputHourlyRate"
@@ -123,7 +173,7 @@
             android:hint="@string/hourly_rate"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="5dp" />
 
         <Button
             android:id="@+id/buttonSubmit"
