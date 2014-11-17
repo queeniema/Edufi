@@ -87,33 +87,109 @@
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal" />
 
-        <CheckBox
-            android:id="@+id/checkboxMath"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Math"
-            android:fontFamily="sans-serif-thin"
-            android:textStyle="normal"
-            android:layout_marginBottom="5dp" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/checkboxMath"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Math"-->
+            <!--android:fontFamily="sans-serif-thin"-->
+            <!--android:textStyle="normal"-->
+            <!--android:layout_marginBottom="5dp" />-->
 
-        <CheckBox
-            android:id="@+id/checkboxScience"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Science"
-            android:fontFamily="sans-serif-thin"
-            android:textStyle="normal"
-            android:layout_marginBottom="5dp"
-            android:checked="false" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/checkboxScience"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Science"-->
+            <!--android:fontFamily="sans-serif-thin"-->
+            <!--android:textStyle="normal"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:checked="false" />-->
 
-        <CheckBox
-            android:id="@+id/checkboxEnglish"
+        <!--<CheckBox-->
+            <!--android:id="@+id/checkboxEnglish"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="English"-->
+            <!--android:fontFamily="sans-serif-thin"-->
+            <!--android:textStyle="normal"-->
+            <!--android:layout_marginBottom="20dp" />-->
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="English"
+            android:id="@+id/checkboxContainer"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
-            android:layout_marginBottom="20dp" />
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/container3"
+                android:fontFamily="sans-serif-thin"
+                android:textStyle="normal"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginRight="40dp">
+
+                <CheckBox
+                    android:id="@+id/checkboxMath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Math"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+                <CheckBox
+                    android:id="@+id/checkboxScience"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Science"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/container4"
+                android:orientation="vertical"
+                android:fontFamily="sans-serif-thin"
+                android:textStyle="normal"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/checkboxEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+                <CheckBox
+                    android:id="@+id/checkboxSocialSciences"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Social Sciences"
+                    android:fontFamily="sans-serif-thin"
+                    android:textStyle="normal"
+                    android:layout_marginBottom="5dp"
+                    android:checked="false"
+                    android:onClick="onCheckboxClicked" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonSubmit"
