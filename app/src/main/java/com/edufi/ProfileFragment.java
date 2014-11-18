@@ -157,7 +157,7 @@ public class ProfileFragment extends Fragment {
 //            Log.e("log_result", "YEAR IN SCHOOL IN PROFILE IS " + yearInSchool);
             if (userType.equals("tutor")) {
                 levelOfEducationTextView.setText(levelOfEducation);
-                hourlyRateTextView.setText(hourlyRate);
+                hourlyRateTextView.setText("$"+hourlyRate+"/hour");
             } else {
                 yearInSchoolTextView.setText(yearInSchool);
             }

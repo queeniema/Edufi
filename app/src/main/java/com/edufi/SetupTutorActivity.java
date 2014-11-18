@@ -86,11 +86,11 @@ public class SetupTutorActivity extends Activity {
                     subjects.remove("English");
                 }
                 break;
-            case R.id.checkboxSocialSciences:
+            case R.id.checkboxHistory:
                 if (checked) {
-                    subjects.add("Social Sciences");
+                    subjects.add("History");
                 } else {
-                    subjects.remove("Social Sciences");
+                    subjects.remove("History");
                 }
                 break;
         }
