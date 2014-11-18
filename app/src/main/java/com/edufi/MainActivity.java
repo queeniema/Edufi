@@ -160,6 +160,9 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
+            case R.id.log_out:
+                logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -173,6 +176,7 @@ public class MainActivity extends Activity {
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        menu.findItem(R.id.log_out).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -245,6 +249,16 @@ public class MainActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    /* Called when the user clicks Log Out from the Action Bar */
+    public void logout() {
+        Intent intent = new Intent(this, MainActivity.class);
+        SharedPreferences.Editor editor = MainActivity.savedPreferences.edit();
+        // Mark that the user has logged out
+        editor.putBoolean(MainActivity.PREF_LOGGED_IN, true);
+        editor.commit();
+        startActivity(intent);
     }
 
 }

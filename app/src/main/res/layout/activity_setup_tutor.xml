@@ -152,10 +152,10 @@
                     android:onClick="onCheckboxClicked" />
 
                 <CheckBox
-                    android:id="@+id/checkboxSocialSciences"
+                    android:id="@+id/checkboxHistory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Social Sciences"
+                    android:text="History"
                     android:fontFamily="sans-serif-thin"
                     android:textStyle="normal"
                     android:layout_marginBottom="5dp"

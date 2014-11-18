@@ -57,44 +57,6 @@ public class SetupStudentActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /* Called when user checks a checkbox */
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.checkboxMath:
-                if (checked) {
-                    subjects.add("Math");
-                } else {
-                    subjects.remove("Math");
-                }
-                break;
-            case R.id.checkboxScience:
-                if (checked) {
-                    subjects.add("Science");
-                } else {
-                    subjects.remove("Science");
-                }
-                break;
-            case R.id.checkboxEnglish:
-                if (checked) {
-                    subjects.add("English");
-                } else {
-                    subjects.remove("English");
-                }
-                break;
-            case R.id.checkboxSocialSciences:
-                if (checked) {
-                    subjects.add("Social Sciences");
-                } else {
-                    subjects.remove("Social Sciences");
-                }
-                break;
-        }
-    }
-
     /* Called when the user clicks the Submit button */
     public void submit(View view) {
         Intent intent = new Intent(this, MainActivity.class);
