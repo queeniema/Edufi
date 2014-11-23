@@ -11,7 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.content.Context;
+import android.app.*;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,7 +36,7 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     ListView reviewsListView = null;
-    View reviewView = null;
+    Spinner subjectSpinner = null;
     Context context = null;
 
 	public HomeFragment(){
@@ -49,24 +53,35 @@ public class HomeFragment extends Fragment {
         if (userType.equals("student")) {
             rootView = inflater.inflate(R.layout.fragment_student_home, container, false);
 
+            subjectSpinner = (Spinner) rootView.findViewById(R.id.spinner);
+
+            subjectSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    Log.i("Selected Subject", parentView.getItemAtPosition(position).toString());
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // your code here
+                    Log.i("Nothing Selected", "wut");
+                }
+
+            });
+
+            Log.i("Debug", "Event listener attached?");
+
+            // Add Subjects to spinner
+            AsyncTask at = new GetSubjectsTask().execute("");
+
         }
         else if (userType.equals("tutor")) {
             rootView = inflater.inflate(R.layout.fragment_tutor_home, container, false);
 
             reviewsListView = (ListView) rootView.findViewById(R.id.tutorReviews);
 
-//            Review r1 = new Review("Wesley Situ", 5, "Very Good");
-//            Review r2 = new Review("Queenie Ma", 4, "Good");
-//            Review[] reviews = new Review[2];
-//            reviews[0] = r1;
-//            reviews[1] = r2;
-//
-//            Log.i("Context", context.toString());
-//            ReviewArrayAdapter adapter = new ReviewArrayAdapter(context, reviews);
-//            reviewsListView.setAdapter(adapter);
-
             // Fill in the Reviews List
-            AsyncTask at = new LongOperation().execute("");
+            AsyncTask at = new GetReviewsTask().execute("");
         }
         else {
             rootView = inflater.inflate(R.layout.fragment_home, container, false);
@@ -75,7 +90,7 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
-    private class LongOperation extends AsyncTask<String, Void, String> {
+    private class GetReviewsTask extends AsyncTask<String, Void, String> {
         protected void onPreExecute() {
 
         }
@@ -83,16 +98,17 @@ public class HomeFragment extends Fragment {
         @Override
         protected String doInBackground(String... arg0) {
             try {
+                String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
                 String link = "http://107.170.241.159/wesley/fetch_reviews.php?tutor_id="
-                        + "1";
-                Log.i("Fetch Link", link);
+                        + userId;
+                // Log.i("Fetch Link", link);
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
                 request.setURI(new URI(link));
 
                 HttpResponse response = client.execute(request);
-                Log.i("Response Status", response.getStatusLine().toString());
+                // Log.i("Response Status", response.getStatusLine().toString());
 
                 BufferedReader in = new BufferedReader
                         (new InputStreamReader(response.getEntity().getContent()));
@@ -104,7 +120,7 @@ public class HomeFragment extends Fragment {
                     break;
                 }
                 in.close();
-                Log.i("Complete Response", sb.toString());
+                // Log.i("Complete Response", sb.toString());
                 return sb.toString();
             } catch (Exception e) {
                 return new String("Exception: " + e.getMessage());
@@ -115,22 +131,85 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(String result) {
             try{
                 JSONArray jArray = new JSONArray(result);
-                Review[] reviews = new Review[jArray.length()];
+                Review[] reviews;
+                if (jArray.length() > 0) {
+                    reviews = new Review[jArray.length()];
 
-                for(int i = 0; i < jArray.length(); i++) {
-                    // Set review data
-                    JSONObject json_data = jArray.getJSONObject(i);
-                    String name = json_data.getString("name");
-                    int rating = json_data.getInt("rating");
-                    String comment = json_data.getString("comment");
-                    Review review = new Review(name, rating, comment);
+                    for (int i = 0; i < jArray.length(); i++) {
+                        // Set review data
+                        JSONObject json_data = jArray.getJSONObject(i);
+                        String name = json_data.getString("name");
+                        int rating = json_data.getInt("rating");
+                        String comment = json_data.getString("comment");
+                        Review review = new Review(name, rating, comment);
 
-                    // Insert review into array
-                    reviews[i] = review;
+                        // Insert review into array
+                        reviews[i] = review;
+                    }
+                }
+                else {
+                    reviews = new Review[1];
+                    reviews[0] = new Review("No Reviews Available", 0, "");
                 }
 
                 ReviewArrayAdapter adapter = new ReviewArrayAdapter(context, reviews);
                 reviewsListView.setAdapter(adapter);
+            }
+            catch(JSONException e){
+                Log.e("log_tag", "Error parsing data " + e.toString());
+            }
+        }
+    }
+
+    private class GetSubjectsTask extends AsyncTask<String, Void, String> {
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+                String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+                String link = "http://107.170.241.159/wesley/fetch_subjects.php";
+                Log.i("Link", link);
+                URL url = new URL(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(link));
+
+                HttpResponse response = client.execute(request);
+
+                BufferedReader in = new BufferedReader
+                        (new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                    break;
+                }
+                in.close();
+                return sb.toString();
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try{
+                JSONArray jArray = new JSONArray(result);
+                ArrayList<String> subjectArray = new ArrayList<String>();
+
+                for (int i = 0; i < jArray.length(); i++) {
+                    // Set review data
+                    JSONObject json_data = jArray.getJSONObject(i);
+                    subjectArray.add(json_data.getString("subject"));
+                }
+
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, subjectArray); //selected item will look like a spinner set from XML
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                subjectSpinner.setAdapter(spinnerArrayAdapter);
             }
             catch(JSONException e){
                 Log.e("log_tag", "Error parsing data " + e.toString());
