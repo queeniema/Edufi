@@ -7,14 +7,23 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Student Home"
+        android:text="What subject do you need tutoring in?"
         android:id="@+id/sHomeLabel"
-        android:textAlignment="center" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="normal"
+        android:textSize="20dp"
+        android:gravity="center" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner" />
+        android:id="@+id/spinner"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <ListView
         android:layout_width="wrap_content"

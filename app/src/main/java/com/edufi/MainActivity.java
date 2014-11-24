@@ -83,8 +83,8 @@ public class MainActivity extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         // Profile
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-//		// Photos
-//		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		// Photos
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 //		// Communities, Will add a counter here
 //		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
 //		// Pages
@@ -193,9 +193,9 @@ public class MainActivity extends Activity {
             case 1:
                 fragment = new ProfileFragment();
                 break;
-//            case 2:
-//                fragment = new PhotosFragment();
-//                break;
+            case 2:
+                fragment = new FindTutorsFragment();
+                break;
 //            case 3:
 //                fragment = new CommunityFragment();
 //                break;

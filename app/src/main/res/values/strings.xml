@@ -17,7 +17,7 @@
     <string-array name="nav_drawer_items">
         <item >Home</item>
         <item >Profile</item>
-        <item >Photos</item>
+        <item >Find Tutors</item>
         <item >Communities</item>
         <item >Pages</item>
         <item >What\'s Hot</item>
