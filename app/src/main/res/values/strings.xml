@@ -18,7 +18,7 @@
         <item >Home</item>
         <item >Profile</item>
         <item >Find Tutors</item>
-        <item >Communities</item>
+        <item >Tutor Me</item>
         <item >Pages</item>
         <item >What\'s Hot</item>
     </string-array>
@@ -76,5 +76,8 @@
         <item>College Senior</item>
     </string-array>
     <string name="subjects_student_needs">Subjects you need help in:</string>
+
+    <!--View Tutor Profile Activity-->
+    <string name="viewTutor">View Tutor Profile</string>
 
 </resources>
