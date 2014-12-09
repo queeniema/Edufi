@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class FindTutorsFragment extends Fragment implements LocationListener {
@@ -79,6 +92,8 @@ public class FindTutorsFragment extends Fragment implements LocationListener {
             double latitude = getLatitude();
             double longitude = getLongitude();
             currentlocation = new LatLng(latitude, longitude);
+
+            new SummaryAsyncTask().execute(String.valueOf(latitude), String.valueOf(longitude));
 
             // \n is for new line
             Toast.makeText(mContext, "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -259,6 +274,38 @@ public class FindTutorsFragment extends Fragment implements LocationListener {
     public void stopUsingGPS(){
         if(locationManager != null){
             locationManager.removeUpdates(this);
+        }
+    }
+
+    public void postData(String latitude, String longitude)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://107.170.241.159/queenie/insert.php");
+
+        try{
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+            String userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("type", "location"));
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
+            Log.e("log_tag", "USERID:  " + userId);
+            nameValuePairs.add(new BasicNameValuePair("userType", userType));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+        }
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error:  " + e.toString());
+        }
+    }
+
+    private class SummaryAsyncTask extends AsyncTask<String, Void, Void> {
+
+        protected Void doInBackground(String... params){
+            postData(params[0], params[1]);
+            return null;
         }
     }
 }
