@@ -442,7 +442,13 @@ public class HomeFragment extends Fragment implements LocationListener{
     }
 
     private class VisitProfileTask extends AsyncTask<String, Void, String> {
-
+        String firstName = "";
+        String lastName = "";
+        String emailAddress = "";
+        String phoneNumber = "";
+        String levelOfEducation = "";
+        String hourlyRate = "";
+        String tutorId = "";
         protected void onPreExecute() {
 
         }
@@ -450,6 +456,7 @@ public class HomeFragment extends Fragment implements LocationListener{
         @Override
         protected String doInBackground(String... arg0) {
             try {
+                tutorId = arg0[0].toString();
                 String link = "http://107.170.241.159/queenie/get.php?id="
                         + arg0[0] + "&type=" + "tutor";
                 URL url = new URL(link);
@@ -475,12 +482,7 @@ public class HomeFragment extends Fragment implements LocationListener{
 
         @Override
         protected void onPostExecute(String result) {
-            String firstName = "";
-            String lastName = "";
-            String emailAddress = "";
-            String phoneNumber = "";
-            String levelOfEducation = "";
-            String hourlyRate = "";
+
             try {
                 JSONArray jArray = new JSONArray(result);
                 for (int i = 0; i < jArray.length(); i++) {
@@ -506,6 +508,7 @@ public class HomeFragment extends Fragment implements LocationListener{
             extras.putString("PHONE_NUMBER", phoneNumber);
             extras.putString("LEVEL_OF_EDUCATION", levelOfEducation);
             extras.putString("HOURLY_RATE", hourlyRate);
+            extras.putString("TUTOR_ID", tutorId);
             intent.putExtras(extras);
 
             startActivity(intent);

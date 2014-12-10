@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,11 +26,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -96,6 +107,8 @@ public class ViewTutorProfileActivity extends Activity {
 
     /* Called when a student clicks the "Tutor me!" button */
     public void sendNotification(View v) {
+        String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+        AsyncTask at = new NotifyTutorTask().execute(userId);
         // Display toast notifying student that their tutoring request has been sent to the tutor
         Toast toast;
         toast = Toast.makeText(getApplicationContext(), "Your request has been sent!", Toast.LENGTH_SHORT);
@@ -182,6 +195,82 @@ public class ViewTutorProfileActivity extends Activity {
         protected Void doInBackground(String... params){
             postData(params[0], params[1], params[2], params[3]);
             return null;
+        }
+    }
+
+    private class NotifyTutorTask extends AsyncTask<String, Void, String> {
+
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+                String studentId = arg0[0].toString();
+                String link = "http://107.170.241.159/wesley/fetch_student.php?sid="
+                        + studentId;
+                URL url = new URL(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(link));
+                HttpResponse response = client.execute(request);
+                BufferedReader in = new BufferedReader
+                        (new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                    break;
+                }
+                in.close();
+                return sb.toString();
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                JSONArray jArray = new JSONArray(result);
+                String studentId = "";
+                String name = "";
+                for (int i = 0; i < jArray.length(); i++) {
+                    JSONObject json_data = jArray.getJSONObject(i);
+                    studentId = json_data.getString("id");
+                    name = json_data.getString("name");
+                }
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(context)
+                                .setSmallIcon(R.drawable.ic_communities)
+                                .setContentTitle("You've been requested to be a tutor!")
+                                .setContentText(name + " wants to be edufied!");
+
+                Intent resultIntent = new Intent(context, ViewTutorProfileActivity.class);
+                // Send with the intent as a bundle
+                Bundle extras = new Bundle();
+                extras.putString("STUDENT_ID", studentId);
+                resultIntent.putExtras(extras);
+                // Because clicking the notification opens a new ("special") activity, there's
+                // no need to create an artificial back stack.
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(context,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                // Sets an ID for the notification
+                int mNotificationId = 001;
+                // Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                // Builds the notification and issues it.
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            } catch (JSONException e) {
+                Log.e("log_tag", "Error parsing data " + e.toString());
+            }
         }
     }
 }
