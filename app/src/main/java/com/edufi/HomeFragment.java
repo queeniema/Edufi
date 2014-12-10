@@ -38,6 +38,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -64,6 +66,7 @@ public class HomeFragment extends Fragment implements LocationListener{
     static LatLng currentlocation;
     private GoogleMap map;
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
+    private ArrayList<Integer> tidArray = new ArrayList<Integer>();
 
     private Context context = null;
 
@@ -146,6 +149,55 @@ public class HomeFragment extends Fragment implements LocationListener{
 
             map = mf.getMap();
 
+            // Setting a custom info window adapter for the google map
+            map.setInfoWindowAdapter(new InfoWindowAdapter() {
+
+                // Use default InfoWindow frame
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+                // Defines the contents of the InfoWindow
+                @Override
+                public View getInfoContents(Marker arg0) {
+
+                    // Getting view from the layout file info_window_layout
+                    View v = getActivity().getLayoutInflater().inflate(R.layout.map_marker_info, null);
+                    //Log.i("View", v.toString());
+                    // Getting the tutor's name
+                    String tutorName = arg0.getTitle();
+
+                    // Getting the tutor's rating
+                    Double tutorRating = Double.valueOf(arg0.getSnippet());
+
+                    // Getting reference to the TextView to set tutor's name
+                    TextView tName = (TextView) v.findViewById(R.id.tName);
+
+                    // Getting reference to the RatingBar to set tutor's rating
+                    RatingBar tRating = (RatingBar) v.findViewById(R.id.tRating);
+
+                    // Setting the name
+                    tName.setText(tutorName);
+
+                    // Setting the rating
+                    Log.i("Rating",String.valueOf(tutorRating.floatValue()));
+                    tRating.setRating(tutorRating.floatValue());
+
+                    // Returning the view containing InfoWindow contents
+                    return v;
+
+                }
+            });
+
+            map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    AsyncTask at = new VisitProfileTask().execute(tidArray.get(markerArray.indexOf(marker)).toString());
+                }
+            });
+
             // check if GPS enabled
             if(canGetLocation()){
                 double latitude = getLatitude();
@@ -157,18 +209,18 @@ public class HomeFragment extends Fragment implements LocationListener{
 
                 map.setMyLocationEnabled(true);
 
-                Marker you = map.addMarker(new MarkerOptions()
-                        .position(currentlocation)
-                        .title("You")
-                        .snippet("You are here")
-                        .icon(BitmapDescriptorFactory
-                                .fromResource(R.drawable.ic_launcher)));
+//                Marker you = map.addMarker(new MarkerOptions()
+//                        .position(currentlocation)
+//                        .title("You")
+//                        .snippet("You are here")
+//                        .icon(BitmapDescriptorFactory
+//                                .fromResource(R.drawable.ic_launcher)));
 
                 // Move the camera instantly to hamburg with a zoom of 15.
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentlocation, 15));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentlocation, 14));
 
                 // Zoom in, animating the camera.
-                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
             } else{
                 // can't get location
                 // GPS or Network is not enabled
@@ -332,6 +384,7 @@ public class HomeFragment extends Fragment implements LocationListener{
                 markerArray.get(i).remove();
             }
             markerArray.clear();
+            tidArray.clear();
         }
 
         @Override
@@ -375,15 +428,87 @@ public class HomeFragment extends Fragment implements LocationListener{
                     Marker tutor = map.addMarker(new MarkerOptions()
                             .position(tutorlocation)
                             .title(json_data.getString("name"))
-                            .snippet("Rating: " + json_data.getString("rating") + "/5")
+                            .snippet(json_data.getString("rating"))
                             .icon(BitmapDescriptorFactory
                                     .fromResource(R.drawable.ic_launcher)));
                     markerArray.add(tutor);
+                    tidArray.add(new Integer(json_data.getInt("id")));
                 }
             }
             catch(JSONException e){
                 Log.e("log_tag", "Error parsing data " + e.toString());
             }
+        }
+    }
+
+    private class VisitProfileTask extends AsyncTask<String, Void, String> {
+
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+                String link = "http://107.170.241.159/queenie/get.php?id="
+                        + arg0[0] + "&type=" + "tutor";
+                URL url = new URL(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(link));
+                HttpResponse response = client.execute(request);
+                BufferedReader in = new BufferedReader
+                        (new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                    break;
+                }
+                in.close();
+                return sb.toString();
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            String firstName = "";
+            String lastName = "";
+            String emailAddress = "";
+            String phoneNumber = "";
+            String levelOfEducation = "";
+            String hourlyRate = "";
+            try {
+                JSONArray jArray = new JSONArray(result);
+                for (int i = 0; i < jArray.length(); i++) {
+                    JSONObject json_data = jArray.getJSONObject(i);
+                    firstName = json_data.getString("firstName");
+                    lastName = json_data.getString("lastName");
+                    emailAddress = json_data.getString("emailAddress");
+                    phoneNumber = json_data.getString("phoneNumber");
+                    levelOfEducation = json_data.getString("levelOfEducation");
+                    hourlyRate = json_data.getString("hourlyRate");
+                }
+            } catch (JSONException e) {
+                Log.e("log_tag", "Error parsing data " + e.toString());
+            }
+
+            Intent intent = new Intent(getActivity(), ViewTutorProfileActivity.class);
+
+            // Send with the intent as a bundle
+            Bundle extras = new Bundle();
+            extras.putString("FIRST_NAME", firstName);
+            extras.putString("LAST_NAME", lastName);
+            extras.putString("EMAIL_ADDRESS", emailAddress);
+            extras.putString("PHONE_NUMBER", phoneNumber);
+            extras.putString("LEVEL_OF_EDUCATION", levelOfEducation);
+            extras.putString("HOURLY_RATE", hourlyRate);
+            intent.putExtras(extras);
+
+            startActivity(intent);
         }
     }
 
