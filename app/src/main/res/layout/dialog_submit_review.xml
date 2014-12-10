@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating:"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:textSize="17dp"
+            android:layout_margin="15dp" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comment:"
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="normal"
+        android:textSize="17dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp" />
+
+    <EditText
+        android:id="@+id/review_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="Leave your comment here."
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="normal"
+        android:textSize="17dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp" />
+
+</LinearLayout>

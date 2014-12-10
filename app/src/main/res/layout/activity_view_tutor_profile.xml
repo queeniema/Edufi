@@ -80,13 +80,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Tutor Me!"
+            android:text="Tutor me!"
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
             android:textSize="25dp"
             android:padding="15dp"
             android:layout_marginTop="60dp"
             android:onClick="sendNotification"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave a review"
+            android:fontFamily="sans-serif-thin"
+            android:textStyle="normal"
+            android:textSize="25dp"
+            android:onClick="openReviewPopup"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 

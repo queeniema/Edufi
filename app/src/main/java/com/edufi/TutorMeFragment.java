@@ -124,6 +124,7 @@ public class TutorMeFragment extends Fragment implements View.OnClickListener {
 
             // Send with the intent as a bundle
             Bundle extras = new Bundle();
+            extras.putString("TUTOR_ID", tutorId);
             extras.putString("FIRST_NAME", firstName);
             extras.putString("LAST_NAME", lastName);
             extras.putString("EMAIL_ADDRESS", emailAddress);
