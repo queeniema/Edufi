@@ -505,8 +505,8 @@ public class HomeFragment extends Fragment implements LocationListener{
             TextView commentView = (TextView) rowView.findViewById(R.id.comment);
 
             raterNameView.setText(values[position].getName());
-            ratingView.setNumStars(5);
             ratingView.setRating(values[position].getRating());
+            ratingView.setIsIndicator(true);
             commentView.setText(values[position].getComment());
 
             return rowView;

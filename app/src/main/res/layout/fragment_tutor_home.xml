@@ -3,20 +3,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="47dp"-->
-        <!--android:text="Tutor Home"-->
-        <!--android:id="@+id/tHomeLabel"-->
-        <!--android:textAlignment="center" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Your Reviews"
+        android:id="@+id/sHomeLabel"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textStyle="bold" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tutorReviews"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-thin"

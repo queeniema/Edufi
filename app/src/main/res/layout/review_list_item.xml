@@ -10,15 +10,17 @@
         android:text="Name"
         android:id="@+id/raterName"
         android:layout_weight="0.07"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:textSize="15dp" />
 
     <RatingBar
-        android:layout_width="378dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
-        android:layout_gravity="right"
+        android:layout_gravity="center"
         android:layout_weight="0.07"
-        android:numStars="5" />
+        android:numStars="5"
+        android:stepSize="1.0" />
 
     <TextView
         android:layout_width="match_parent"
@@ -26,5 +28,6 @@
         android:text="Comment"
         android:id="@+id/comment"
         android:layout_weight="0.07"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp" />
 </LinearLayout>
