@@ -40,9 +40,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,6 +113,13 @@ public class HomeFragment extends Fragment implements LocationListener{
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     Log.i("Selected Subject", parentView.getItemAtPosition(position).toString());
+                    new GetTutorsTask().execute(parentView.getItemAtPosition(position).toString());
+//                    FragmentManager fm = getChildFragmentManager();
+//                    SupportMapFragment mf = (SupportMapFragment) fm.findFragmentById(R.id.map);
+//                    // Initially have the map hidden
+//                    FragmentTransaction ft = fm.beginTransaction();
+//                    ft.show(mf);
+//                    ft.commit();
                 }
 
                 @Override
@@ -124,13 +135,12 @@ public class HomeFragment extends Fragment implements LocationListener{
             // Add Subjects to spinner
             AsyncTask at = new GetSubjectsTask().execute("");
 
-            FragmentActivity fa = (FragmentActivity) context;
             FragmentManager fm = getChildFragmentManager();
             SupportMapFragment mf = (SupportMapFragment) fm.findFragmentById(R.id.map);
             // Initially have the map hidden
             FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mf);
-            ft.commit();
+//            ft.hide(mf);
+//            ft.commit();
 
             map = mf.getMap();
 
@@ -306,6 +316,85 @@ public class HomeFragment extends Fragment implements LocationListener{
         }
     }
 
+    private class UpdateLocationTask extends AsyncTask<String, Void, Void> {
+        protected Void doInBackground(String... params){
+            postData(params[0], params[1]);
+            return null;
+        }
+    }
+
+    private class GetTutorsTask extends AsyncTask<String, Void, String> {
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+                String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+                String link = "http://107.170.241.159/wesley/fetch_tutors.php?uid="+userId+"&subject='"+arg0+"'";
+                Log.i("Link", link);
+                URL url = new URL(link);
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(link));
+
+                HttpResponse response = client.execute(request);
+
+                BufferedReader in = new BufferedReader
+                        (new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                    break;
+                }
+                in.close();
+                return sb.toString();
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try{
+                JSONArray jArray = new JSONArray(result);
+
+                for (int i = 0; i < jArray.length(); i++) {
+                    // Add Location Markers
+                    JSONObject json_data = jArray.getJSONObject(i);
+                }
+            }
+            catch(JSONException e){
+                Log.e("log_tag", "Error parsing data " + e.toString());
+            }
+        }
+    }
+
+    public void postData(String latitude, String longitude)
+    {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://107.170.241.159/wesley/update_location.php");
+
+        try{
+            String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
+            String userType = MainActivity.savedPreferences.getString(MainActivity.USER_TYPE, "");
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("id", userId));
+            nameValuePairs.add(new BasicNameValuePair("userType", userType));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+        }
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error:  " + e.toString());
+        }
+    }
+
     public Location getLocation() {
         try {
             locationManager = (LocationManager) context
@@ -340,6 +429,7 @@ public class HomeFragment extends Fragment implements LocationListener{
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            new UpdateLocationTask().execute(String.valueOf(latitude), String.valueOf(longitude));
                         }
                     }
                 }
@@ -357,6 +447,7 @@ public class HomeFragment extends Fragment implements LocationListener{
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                new UpdateLocationTask().execute(String.valueOf(latitude), String.valueOf(longitude));
                             }
                         }
                     }
