@@ -63,6 +63,7 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment implements LocationListener{
     static LatLng currentlocation;
     private GoogleMap map;
+    private ArrayList<Marker> markerArray = new ArrayList<Marker>();
 
     private Context context = null;
 
@@ -113,7 +114,8 @@ public class HomeFragment extends Fragment implements LocationListener{
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     Log.i("Selected Subject", parentView.getItemAtPosition(position).toString());
-                    new GetTutorsTask().execute(parentView.getItemAtPosition(position).toString());
+                    String subject = parentView.getItemAtPosition(position).toString();
+                    new GetTutorsTask().execute(subject);
 //                    FragmentManager fm = getChildFragmentManager();
 //                    SupportMapFragment mf = (SupportMapFragment) fm.findFragmentById(R.id.map);
 //                    // Initially have the map hidden
@@ -325,14 +327,18 @@ public class HomeFragment extends Fragment implements LocationListener{
 
     private class GetTutorsTask extends AsyncTask<String, Void, String> {
         protected void onPreExecute() {
-
+            // Clear Map of Tutors
+            for(int i = 0; i < markerArray.size(); i++) {
+                markerArray.get(i).remove();
+            }
+            markerArray.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             try {
                 String userId = MainActivity.savedPreferences.getString(MainActivity.USER_ID, "");
-                String link = "http://107.170.241.159/wesley/fetch_tutors.php?uid="+userId+"&subject='"+arg0+"'";
+                String link = "http://107.170.241.159/wesley/fetch_tutors.php?uid="+userId+"&subject="+arg0[0];
                 Log.i("Link", link);
                 URL url = new URL(link);
                 HttpClient client = new DefaultHttpClient();
@@ -365,6 +371,14 @@ public class HomeFragment extends Fragment implements LocationListener{
                 for (int i = 0; i < jArray.length(); i++) {
                     // Add Location Markers
                     JSONObject json_data = jArray.getJSONObject(i);
+                    LatLng tutorlocation = new LatLng(json_data.getDouble("latitude"), json_data.getDouble("longitude"));
+                    Marker tutor = map.addMarker(new MarkerOptions()
+                            .position(tutorlocation)
+                            .title(json_data.getString("name"))
+                            .snippet("Rating: " + json_data.getString("rating") + "/5")
+                            .icon(BitmapDescriptorFactory
+                                    .fromResource(R.drawable.ic_launcher)));
+                    markerArray.add(tutor);
                 }
             }
             catch(JSONException e){
