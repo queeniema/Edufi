@@ -93,7 +93,7 @@ public class FindTutorsFragment extends Fragment implements LocationListener {
             double longitude = getLongitude();
             currentlocation = new LatLng(latitude, longitude);
 
-            new SummaryAsyncTask().execute(String.valueOf(latitude), String.valueOf(longitude));
+            //new SummaryAsyncTask().execute(String.valueOf(latitude), String.valueOf(longitude));
 
             // \n is for new line
             Toast.makeText(mContext, "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
